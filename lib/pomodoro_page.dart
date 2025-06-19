@@ -13,6 +13,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
   int _tempoRestante = 1500;
   bool _rodando = false;
   Timer? _timer;
+  int _tempoEscolhido = 25;
 
   void _iniciarTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -42,7 +43,7 @@ class _PomodoroPageState extends State<PomodoroPage> {
   void _resetarTimer() {
     _timer?.cancel();
     setState(() {
-      _tempoRestante = 1500;
+      _tempoRestante = _tempoEscolhido * 60;
       _rodando = false;
     });
   }
@@ -66,6 +67,22 @@ class _PomodoroPageState extends State<PomodoroPage> {
               onPressed: _resetarTimer,
               child: const Text('Resetar'),
             ),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),child: TextField(
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Tempo (min)',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (valor){
+                final int? minutos = int.tryParse(valor);
+                if (minutos != null && minutos > 0){
+                  setState(() {
+                    _tempoEscolhido = minutos;
+                    _tempoRestante = minutos * 60;
+                  });
+                }
+              },
+            ),)
           ],
         ),
       ),
